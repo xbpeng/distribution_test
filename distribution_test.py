@@ -7,7 +7,9 @@ import density_net as dn
 def train(f, h, steps):
     batch_size = 32
     xs = h.sample_xs(batch_size)
-    gs = f.eval_grad(xs)
+    # hack
+    #gs = f.eval_grad(xs)
+    gs = f.eval(xs)
     h.update(xs, gs)
 
 def main():
@@ -29,11 +31,16 @@ def main():
     i = 0
     while(True):
         train(f, h, iter_steps)
-        samples = h.sample(num_samples)
-        samples_flat = np.concatenate(samples)
+        # hack
+        #samples = h.sample(num_samples)
+        #samples_flat = np.concatenate(samples)
 
         plt.clf()
-        plt.hist(samples_flat, num_bins, [x_min, x_max], normed=True, label='samples')
+        # hack
+        #plt.hist(samples_flat, num_bins, [x_min, x_max], normed=True, label='samples')
+        test_xs = np.reshape(xs, [-1, 1])
+        test_ys = h.eval(test_xs)
+        plt.plot(xs, test_ys, label='h(x)')
         plt.plot(xs, ys, 'g-', label='f(x)')
 
         axes = plt.gca()
@@ -43,7 +50,7 @@ def main():
         plt.title('Iteration: ' + str(i))
         plt.legend()
         plt.xlabel('x')
-        plt.pause(0.05)
+        plt.pause(0.01)
 
         i += 1
 
