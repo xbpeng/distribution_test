@@ -21,12 +21,12 @@ class DensityNet(object):
         output = U.dense(h2, self.output_dim, weight_init=U.NormalizedColumns(1.0))
 
         # hack
-        #net_params = tf.trainable_variables()
-        #grads = tf.gradients(output, net_params, -g_n)
-        #update_op = tf.train.AdamOptimizer(step_size).apply_gradients(zip(grads, net_params))
+        net_params = tf.trainable_variables()
+        grads = tf.gradients(output, net_params, -g_n)
+        update_op = tf.train.AdamOptimizer(step_size).apply_gradients(zip(grads, net_params))
         
-        loss = 0.5 * U.mean(U.square(g_n - output))
-        update_op = tf.train.AdamOptimizer(step_size).minimize(loss)
+        #loss = 0.5 * U.mean(U.square(g_n - output))
+        #update_op = tf.train.AdamOptimizer(step_size).minimize(loss)
 
         self.eval = U.function([x_n], output)
         self._step = U.function([x_n, g_n], update_op)
