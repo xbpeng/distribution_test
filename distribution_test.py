@@ -7,7 +7,8 @@ import density_net as dn
 def train(f, h, steps):
     batch_size = 32
     xs = h.sample_xs(batch_size)
-    return
+    gs = f.eval_grad(xs)
+    h.update(xs, gs)
 
 def main():
     x_min = -1

@@ -43,5 +43,5 @@ class DensityNet(object):
         xs = np.array([np.random.randn(self.input_dim) for i in range(n)])
         return xs
 
-    def update(x_n, g_n):
+    def update(self, x_n, g_n):
         self._step(x_n, g_n)
