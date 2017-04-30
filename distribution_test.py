@@ -6,30 +6,50 @@ import density_net as dn
 
 def train(f, h, steps):
     batch_size = 32
-    xs = h.sample_xs(batch_size)
-    ys = h.eval(xs)
-    gs = f.eval_grad(ys)
-    h.update(xs, gs)
+    entropy_w = 1
+    num_samples = 32
+    
+    for j in range(steps):
+        xs = h.sample_xs(batch_size)
+        ys = h.eval(xs)
+        gs = f.eval_grad(ys)
+
+        for i in range(batch_size):
+            x = xs[i,:]
+            y = ys[i,:]
+            sample_xs = h.sample_xs(num_samples)
+            sample_ys = h.eval(sample_xs)
+            deltas = y - sample_ys
+            dists = np.sum(deltas * deltas, axis=1)
+
+            med = np.median(dists)
+            k = np.exp(-dists / med)
+            k *= 2 / (num_samples * med)
+            dy = np.transpose(deltas).dot(k)
+            gs[i,:] += entropy_w * dy
+    
+        h.update(xs, gs)
 
 def main():
-    x_min = -1
-    x_max = 1
+    x_min = -2
+    x_max = 2
     y_min = 0
     y_max = 3
     dx = 0.01
-    num_samples = 256
-    num_bins = 20
-    iter_steps = 1
+    num_samples = 1000
+    num_bins = 50
+    iter_steps = 10
 
     f = df.DensityFunc()
-    xs = np.arange(-1, 1, 0.01)
-    ys = [f.eval(x) for x in xs]
+    xs = np.arange(x_min, x_max, 0.01)
+    ys = f.eval(xs)
 
     h = dn.DensityNet()
 
     i = 0
     while(True):
         train(f, h, iter_steps)
+        i += iter_steps
 
         samples = h.sample(num_samples)
         samples_flat = np.concatenate(samples)
@@ -47,7 +67,6 @@ def main():
         plt.xlabel('x')
         plt.pause(0.01)
 
-        i += 1
 
 if __name__ == "__main__":
     main()

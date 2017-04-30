@@ -9,16 +9,16 @@ import learning.tf_util as U
 class DensityNet(object):
 
     def __init__(self):
-        self.input_dim = 1
+        self.input_dim = 4
         self.output_dim = 1
-        step_size = 0.005
+        step_size = 0.0001
 
         x_n = U.Input([None, self.input_dim], name='x')
         g_n = U.Input([None, self.output_dim], name='g')
 
         h1 = U.relu(U.dense(x_n, 64, weight_init=U.Xavier(1.0)))
-        h2 = U.relu(U.dense(h1, 32, weight_init=U.Xavier(1.0)))
-        output = U.dense(h2, self.output_dim, weight_init=U.NormalizedColumns(1.0))
+        h2 = U.relu(U.dense(h1, 64, weight_init=U.Xavier(1.0)))
+        output = U.dense(h2, self.output_dim, weight_init=U.IIDUniform(-0.1, 0.1))
 
         net_params = tf.trainable_variables()
         grads = tf.gradients(output, net_params, -g_n)

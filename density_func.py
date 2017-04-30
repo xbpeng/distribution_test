@@ -3,7 +3,7 @@ import numpy as np
 class DensityFunc(object):
 
     def __init__(self):
-        self.mean = 0
+        self.mean = 1
         self.stdev = 0.5
 
     def eval(self, x):
