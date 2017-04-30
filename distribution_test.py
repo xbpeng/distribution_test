@@ -66,6 +66,7 @@ def main():
         plt.legend()
         plt.xlabel('x')
         plt.pause(0.01)
+        plt.savefig('output/' + str(i).zfill(6) + '.png')
 
 
 if __name__ == "__main__":
