@@ -6,25 +6,27 @@ import density_net as dn
 
 def train(f, h, steps):
     batch_size = 32
-    entropy_w = 1
+    entropy_w = 2
     num_samples = 32
     
     for j in range(steps):
         xs = h.sample_xs(batch_size)
         ys = h.eval(xs)
-        gs = f.eval_grad(ys)
+        gs = f.eval_grad_logp(ys)
 
         for i in range(batch_size):
             x = xs[i,:]
             y = ys[i,:]
             sample_xs = h.sample_xs(num_samples)
             sample_ys = h.eval(sample_xs)
+
             deltas = y - sample_ys
             dists = np.sum(deltas * deltas, axis=1)
 
             med = np.median(dists)
             k = np.exp(-dists / med)
             k *= 2 / (num_samples * med)
+
             dy = np.transpose(deltas).dot(k)
             gs[i,:] += entropy_w * dy
     
@@ -34,11 +36,11 @@ def main():
     x_min = -2
     x_max = 2
     y_min = 0
-    y_max = 3
+    y_max = 2
     dx = 0.01
     num_samples = 1000
     num_bins = 50
-    iter_steps = 10
+    iter_steps = 20
 
     f = df.DensityFunc()
     xs = np.arange(x_min, x_max, 0.01)
