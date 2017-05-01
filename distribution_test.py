@@ -14,6 +14,8 @@ def train(f, h, steps):
         ys = h.eval(xs)
         gs = f.eval_grad_logp(ys)
 
+        # hack
+        #gs.fill(0)
         for i in range(batch_size):
             x = xs[i,:]
             y = ys[i,:]
@@ -29,6 +31,10 @@ def train(f, h, steps):
 
             dy = np.transpose(deltas).dot(k)
             gs[i,:] += entropy_w * dy
+
+            # hack
+            #sample_gs = f.eval_grad_logp(sample_ys)
+            #gs[i,:] += np.transpose(sample_gs).dot(k)
     
         h.update(xs, gs)
 
