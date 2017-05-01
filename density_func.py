@@ -3,9 +3,13 @@ import numpy as np
 class DensityFunc(object):
 
     def __init__(self):
-        self.means = [-0.8, 0.8]
+        #self.means = [-0.9, 0.1, 1.1]
+        #self.stds = [0.25, 0.2, 0.2]
+        #self.weights = [2, 1, 1]
+        self.means = [-0.7, 0.7]
         self.stds = [0.3, 0.3]
         self.weights = [1, 1]
+
         self.weights /= np.sum(self.weights)
 
         assert(len(self.means) == len(self.stds))

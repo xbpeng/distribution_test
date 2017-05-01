@@ -47,12 +47,15 @@ def main():
     num_samples = 1000
     num_bins = 50
     iter_steps = 20
+    input_dim = 1
+    output_dim = 1
 
     f = df.DensityFunc()
     xs = np.arange(x_min, x_max, 0.01)
     ys = f.eval(xs)
+    #gs = f.eval_grad_logp(xs)
 
-    h = dn.DensityNet()
+    h = dn.DensityNet(input_dim, output_dim)
 
     i = 0
     while(True):
@@ -65,6 +68,7 @@ def main():
         plt.clf()
         plt.plot(xs, ys, 'g-', label='f(x)')
         plt.hist(samples_flat, num_bins, [x_min, x_max], normed=True, label='samples')
+        #plt.plot(xs, gs, label='g(x)')
 
         axes = plt.gca()
         axes.set_xlim([x_min,x_max])
@@ -74,7 +78,7 @@ def main():
         plt.legend()
         plt.xlabel('x')
         plt.pause(0.01)
-        plt.savefig('output/' + str(i).zfill(6) + '.png')
+        #plt.savefig('output/' + str(i).zfill(6) + '.png')
 
 
 if __name__ == "__main__":
