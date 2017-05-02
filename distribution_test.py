@@ -38,24 +38,35 @@ def train(f, h, steps):
     
         h.update(xs, gs)
 
+def BuildDensityFunc():
+    means = [np.array([-0.7]), 
+             np.array([0.7])]
+    covs = [np.matrix([0.3 * 0.3]), 
+            np.matrix([0.3 * 0.3])]
+    weights = [1, 1]
+    f = df.DensityFunc(means, covs, weights)
+
+    return f
+
 def main():
     x_min = -2
     x_max = 2
     y_min = 0
     y_max = 2
     dx = 0.01
+
+    input_dim = 1
+    output_dim = 1
     num_samples = 1000
     num_bins = 50
     iter_steps = 20
-    input_dim = 1
-    output_dim = 1
+    
+    f = BuildDensityFunc()
+    h = dn.DensityNet(input_dim, output_dim)
 
-    f = df.DensityFunc()
-    xs = np.arange(x_min, x_max, 0.01)
+    xs = np.arange(x_min, x_max, dx)
     ys = f.eval(xs)
     #gs = f.eval_grad_logp(xs)
-
-    h = dn.DensityNet(input_dim, output_dim)
 
     i = 0
     while(True):
