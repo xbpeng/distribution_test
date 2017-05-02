@@ -41,8 +41,8 @@ def train(f, h, steps):
 def BuildDensityFunc():
     means = [np.array([-0.7]), 
              np.array([0.7])]
-    covs = [np.matrix([0.3 * 0.3]), 
-            np.matrix([0.3 * 0.3])]
+    covs = [np.array([[0.3 * 0.3]]), 
+            np.array([[0.3 * 0.3]])]
     weights = [1, 1]
     f = df.DensityFunc(means, covs, weights)
 
@@ -65,6 +65,7 @@ def main():
     h = dn.DensityNet(input_dim, output_dim)
 
     xs = np.arange(x_min, x_max, dx)
+    xs = xs.reshape(-1, 1)
     ys = f.eval(xs)
     #gs = f.eval_grad_logp(xs)
 
