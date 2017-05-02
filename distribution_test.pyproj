@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>512aa550-3bda-465e-9a48-5b298e228350</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>distribution_test.py</StartupFile>
+    <StartupFile>distribution_test2d.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,6 +25,7 @@
     <Compile Include="density_func.py" />
     <Compile Include="distribution_test.py" />
     <Compile Include="density_net.py" />
+    <Compile Include="distribution_test2d.py" />
     <Compile Include="svgd.py" />
   </ItemGroup>
   <PropertyGroup>
