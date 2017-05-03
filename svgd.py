@@ -17,7 +17,8 @@ def step(f, h, batch_size, entropy_w, num_samples):
         dists = np.sum(deltas * deltas, axis=1)
 
         sort_indices = np.argsort(dists)
-        med_idx = sort_indices[int((batch_size - 1) / 2)]
+        mid = int((batch_size - 1) / 2)
+        med_idx = sort_indices[mid]
         med = dists[med_idx]
 
         m = med / np.log(num_samples)

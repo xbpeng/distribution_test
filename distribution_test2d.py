@@ -86,7 +86,7 @@ def main():
         plt.legend()
         plt.gca().set_aspect('equal', adjustable='box')
         plt.pause(0.01)
-        plt.savefig('output/' + str(i).zfill(6) + '.png')
+        #plt.savefig('output/' + str(i).zfill(6) + '.png')
 
 
 if __name__ == "__main__":
