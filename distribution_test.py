@@ -38,7 +38,7 @@ def main():
     y_max = 2
     dx = 0.01
 
-    num_samples = 1000
+    num_samples = 2000
     num_bins = 50
     iter_steps = 5
     

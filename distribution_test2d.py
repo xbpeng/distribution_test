@@ -14,20 +14,26 @@ def train(f, h, steps):
         svgd.step(f, h, batch_size=batch_size, entropy_w = entropy_w, num_samples=num_samples)
 
 def build_density_func():
-    means = [np.array([-0.75, 0.4]),
-             np.array([0.75, -0.4])]
-    axes = [np.array([[0.7, 0], 
-                      [0, 0.3]]),
-            np.array([[0.7, 0], 
-                      [0, 0.3]])]
+    #means = [np.array([-0.75, 0.4]),
+    #         np.array([0.75, -0.4])]
+    #axes = [np.array([[0.7, 0], 
+    #                  [0, 0.3]]),
+    #        np.array([[0.7, 0], 
+    #                  [0, 0.3]])]
+    #weights = [1, 1]
 
-    theta = np.pi * 0.25
+    means = [np.array([-0.75, 0.4])]
+    axes = [np.array([[0.7, 0], 
+                      [0, 0.3]])]
+    weights = [1]
+
+    theta = np.pi * 0.3
     axes[0] = np.array([[np.cos(theta), -np.sin(theta)], 
                         [np.sin(theta), np.cos(theta)]]).dot(axes[0])
 
     covs = [np.outer(A[:,0], A[:,0]) + np.outer(A[:,1], A[:,1]) for A in axes]
 
-    weights = [1, 1]
+    
     f = df.DensityFunc(means, covs, weights)
 
     return f
