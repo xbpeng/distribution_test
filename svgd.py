@@ -27,4 +27,5 @@ def step(f, h, batch_size, entropy_w, num_samples):
         #sample_gs = f.eval_grad_logp(sample_ys)
         #gs[i,:] += np.transpose(sample_gs).dot(k)
     
+    gs /= batch_size
     h.update(xs, gs)

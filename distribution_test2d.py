@@ -32,7 +32,7 @@ def build_density_func():
 def build_net():
     input_dim = 2
     output_dim = 2
-    step_size = 0.00005
+    step_size = 0.001
     
     h = dn.DensityNet(input_dim, output_dim, step_size)
     return h
