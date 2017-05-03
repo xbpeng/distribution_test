@@ -51,11 +51,14 @@ def main():
     #gs = f.eval_grad_logp(xs)
 
     i = 0
+    sample_xs = h.sample_xs(num_samples)
+
     while(True):
         train(f, h, iter_steps)
         i += iter_steps
 
-        samples = h.sample(num_samples)
+        sample_xs = h.sample_xs(num_samples)
+        samples = h.eval(sample_xs)
         samples_flat = np.concatenate(samples)
 
         plt.clf()
