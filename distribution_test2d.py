@@ -7,30 +7,61 @@ import svgd
 
 def train(f, h, steps):
     batch_size = 32
-    entropy_w = 0.1
+    entropy_w = 0.2
     num_samples = 32
 
     for j in range(steps):
         svgd.step(f, h, batch_size=batch_size, entropy_w = entropy_w, num_samples=num_samples)
 
 def build_density_func():
-    #means = [np.array([-0.75, 0.4]),
-    #         np.array([0.75, -0.4])]
-    #axes = [np.array([[0.7, 0], 
-    #                  [0, 0.3]]),
-    #        np.array([[0.7, 0], 
-    #                  [0, 0.3]])]
-    #weights = [1, 1]
 
-    means = [np.array([-0.75, 0.4])]
-    axes = [np.array([[0.7, 0], 
-                      [0, 0.4]])]
-    weights = [1]
+    d = 2
+    if (d == 0):
+        means = [np.array([-0.75, 0.4])]
+        axes = [np.array([[0.7, 0], 
+                          [0, 0.4]])]
+        weights = [1]
 
-    theta = np.pi * 0.3
-    axes[0] = np.array([[np.cos(theta), -np.sin(theta)], 
-                        [np.sin(theta), np.cos(theta)]]).dot(axes[0])
+        theta0 = np.pi * 0.3
+        axes[0] = np.array([[np.cos(theta0), -np.sin(theta0)], 
+                            [np.sin(theta0), np.cos(theta0)]]).dot(axes[0])
+    elif (d == 1):
+        means = [np.array([-0.75, 0.5]),
+                 np.array([0.75, -0.5])]
+        axes = [np.array([[0.7, 0], 
+                          [0, 0.3]]),
+                np.array([[0.7, 0], 
+                          [0, 0.3]])]
+        weights = [1, 1]
 
+        theta0 = np.pi * 0.3
+        axes[0] = np.array([[np.cos(theta0), -np.sin(theta0)], 
+                            [np.sin(theta0), np.cos(theta0)]]).dot(axes[0])
+
+    elif (d == 2):
+        means = [np.array([-0.75, 0.5]),
+                 np.array([0.75, -0.5]),
+                 np.array([0.75, 0.5])]
+        axes = [np.array([[0.7, 0], 
+                          [0, 0.3]]),
+                np.array([[0.5, 0], 
+                          [0, 0.2]]),
+                np.array([[0.5, 0], 
+                          [0, 0.2]])]
+        weights = [1, 0.5, 0.5]
+
+        theta0 = np.pi * 0.3
+        axes[0] = np.array([[np.cos(theta0), -np.sin(theta0)], 
+                            [np.sin(theta0), np.cos(theta0)]]).dot(axes[0])
+
+        theta1 = np.pi * 0.1
+        axes[1] = np.array([[np.cos(theta1), -np.sin(theta1)], 
+                            [np.sin(theta1), np.cos(theta1)]]).dot(axes[1])
+
+        theta2 = np.pi * -0.2
+        axes[2] = np.array([[np.cos(theta2), -np.sin(theta2)], 
+                            [np.sin(theta2), np.cos(theta2)]]).dot(axes[2])
+    
     covs = [np.outer(A[:,0], A[:,0]) + np.outer(A[:,1], A[:,1]) for A in axes]
 
     
@@ -41,7 +72,7 @@ def build_density_func():
 def build_net():
     input_dim = 2
     output_dim = 2
-    step_size = 0.001
+    step_size = 0.0002
     
     h = dn.DensityNet(input_dim, output_dim, step_size)
     return h
@@ -53,7 +84,7 @@ def main():
 
     num_samples = 2000
     num_bins = 50
-    iter_steps = 20
+    iter_steps = 50
     
     f = build_density_func()
     h = build_net()
