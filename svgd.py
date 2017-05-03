@@ -17,8 +17,9 @@ def step(f, h, batch_size, entropy_w, num_samples):
         dists = np.sum(deltas * deltas, axis=1)
 
         med = np.median(dists)
-        k = np.exp(-dists / med)
-        k *= 2 / (num_samples * med)
+        m = med / np.log(num_samples)
+        k = np.exp(-dists / m)
+        k *= 2 / m
 
         dy = np.transpose(deltas).dot(k)
         gs[i,:] += entropy_w * dy
