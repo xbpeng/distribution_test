@@ -24,7 +24,7 @@ def build_density_func():
 
     means = [np.array([-0.75, 0.4])]
     axes = [np.array([[0.7, 0], 
-                      [0, 0.3]])]
+                      [0, 0.4]])]
     weights = [1]
 
     theta = np.pi * 0.3
@@ -79,7 +79,7 @@ def main():
         plt.clf()
         CS = plt.contour(X0, X1, Z)
         plt.clabel(CS, inline=1, fontsize=10, label='f(x)')
-        plt.scatter(samples[:,0], samples[:,1], label='samples', s=2, alpha=0.5)
+        plt.scatter(samples[:,0], samples[:,1], label='samples', s=4, alpha=0.5)
 
         axes = plt.gca()
         axes.set_xlim([x_min, x_max])
