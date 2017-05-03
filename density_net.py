@@ -8,10 +8,11 @@ import learning.tf_util as U
 
 class DensityNet(object):
 
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, input_dim, output_dim, step_size):
+        momentum = 0.9
+
         self.input_dim = input_dim
         self.output_dim = output_dim
-        step_size = 0.0001
 
         x_n = U.Input([None, self.input_dim], name='x')
         g_n = U.Input([None, self.output_dim], name='g')
@@ -22,7 +23,7 @@ class DensityNet(object):
 
         net_params = tf.trainable_variables()
         grads = tf.gradients(output, net_params, -g_n)
-        update_op = tf.train.AdamOptimizer(step_size).apply_gradients(zip(grads, net_params))
+        update_op = tf.train.MomentumOptimizer(learning_rate=step_size, momentum=momentum).apply_gradients(zip(grads, net_params))
         
         self.eval = U.function([x_n], output)
         self._step = U.function([x_n, g_n], update_op)

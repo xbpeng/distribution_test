@@ -7,13 +7,13 @@ import svgd
 
 def train(f, h, steps):
     batch_size = 32
-    entropy_w = 2
+    entropy_w = 5
     num_samples = 32
 
     for j in range(steps):
         svgd.step(f, h, batch_size=batch_size, entropy_w = entropy_w, num_samples=num_samples)
 
-def BuildDensityFunc():
+def build_density_func():
     means = [np.array([-0.7]), 
              np.array([0.7])]
     covs = [np.array([[0.3 * 0.3]]), 
@@ -23,6 +23,14 @@ def BuildDensityFunc():
 
     return f
 
+def build_net():
+    input_dim = 1
+    output_dim = 1
+    step_size = 0.0001
+    
+    h = dn.DensityNet(input_dim, output_dim, step_size)
+    return h
+
 def main():
     x_min = -2
     x_max = 2
@@ -30,14 +38,12 @@ def main():
     y_max = 2
     dx = 0.01
 
-    input_dim = 1
-    output_dim = 1
     num_samples = 1000
     num_bins = 50
-    iter_steps = 20
+    iter_steps = 5
     
-    f = BuildDensityFunc()
-    h = dn.DensityNet(input_dim, output_dim)
+    f = build_density_func()
+    h = build_net()
 
     xs = np.arange(x_min, x_max, dx)
     xs = xs.reshape(-1, 1)

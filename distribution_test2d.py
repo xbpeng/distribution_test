@@ -13,36 +13,41 @@ def train(f, h, steps):
     for j in range(steps):
         svgd.step(f, h, batch_size=batch_size, entropy_w = entropy_w, num_samples=num_samples)
 
-def BuildDensityFunc():
-    means = [np.array([-1, 0]), 
-             np.array([1, 0])]
-    covs = [np.array([[0.5 * 0.5, 0], 
-                      [0, 0.3 * 0.3]]), 
-            np.array([[0.3 * 0.3, 0], 
-                      [0, 0.3 * 0.3]])]
+def build_density_func():
+    means = [np.array([-0.75, 0.8])]
+    axes = [np.array([[0.7, 0], 
+                      [0, 0.3]])]
 
     theta = np.pi * 0.25
-    covs[0] = np.array([[np.cos(theta), -np.sin(theta)], 
-                        [np.sin(theta), np.cos(theta)]]).dot(covs[0])
+    axes[0] = np.array([[np.cos(theta), -np.sin(theta)], 
+                        [np.sin(theta), np.cos(theta)]]).dot(axes[0])
 
-    weights = [1, 1]
+    covs = [np.outer(A[:,0], A[:,0]) + np.outer(A[:,1], A[:,1]) for A in axes]
+
+    weights = [1]
     f = df.DensityFunc(means, covs, weights)
 
     return f
 
+def build_net():
+    input_dim = 2
+    output_dim = 2
+    step_size = 0.00005
+    
+    h = dn.DensityNet(input_dim, output_dim, step_size)
+    return h
+
 def main():
-    x_min = -3
-    x_max = 3
+    x_min = -2
+    x_max = 2
     dx = 0.01
 
-    input_dim = 1
-    output_dim = 1
     num_samples = 1000
     num_bins = 50
     iter_steps = 20
     
-    f = BuildDensityFunc()
-    h = dn.DensityNet(input_dim, output_dim)
+    f = build_density_func()
+    h = build_net()
 
     xs = np.arange(x_min, x_max, dx)
     X0, X1 = np.meshgrid(xs, xs)
@@ -54,18 +59,15 @@ def main():
 
     i = 0
     while(True):
-        #train(f, h, iter_steps)
+        train(f, h, iter_steps)
         i += iter_steps
 
-        #samples = h.sample(num_samples)
-        #samples_flat = np.concatenate(samples)
+        samples = h.sample(num_samples)
 
         plt.clf()
         CS = plt.contour(X0, X1, Z)
-        plt.clabel(CS, inline=1, fontsize=10)
-        #plt.plot(xs, ys, 'g-', label='f(x)')
-        #plt.hist(samples_flat, num_bins, [x_min, x_max], normed=True, label='samples')
-        #plt.plot(xs, gs, label='g(x)')
+        plt.clabel(CS, inline=1, fontsize=10, label='f(x)')
+        plt.scatter(samples[:,0], samples[:,1], label='samples', s=2, alpha=0.5)
 
         axes = plt.gca()
         axes.set_xlim([x_min, x_max])
