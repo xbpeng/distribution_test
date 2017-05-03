@@ -110,7 +110,7 @@ def main():
         plt.clf()
         CS = plt.contour(X0, X1, Z)
         plt.clabel(CS, inline=1, fontsize=10, label='f(x)')
-        plt.scatter(samples[:,0], samples[:,1], label='samples', s=4, alpha=0.5)
+        plt.scatter(samples[:,0], samples[:,1], c='b', label='samples', s=4, alpha=0.5)
 
         axes = plt.gca()
         axes.set_xlim([x_min, x_max])

@@ -48,8 +48,8 @@ def step(f, h, batch_size, entropy_w, num_samples):
         sample_xs = h.sample_xs(num_samples)
         sample_ys = h.eval(sample_xs)
 
-        #dy = eval_kernel_grad_invsq(y, sample_ys)
-        dy = eval_kernel_grad_gaussian(y, sample_ys)
+        dy = eval_kernel_grad_invsq(y, sample_ys)
+        #dy = eval_kernel_grad_gaussian(y, sample_ys)
         gs[i,:] += entropy_w * dy
 
         # hack
