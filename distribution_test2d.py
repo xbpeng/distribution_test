@@ -41,9 +41,9 @@ def build_density_func():
                             [np.sin(theta0), np.cos(theta0)]]).dot(axes[0])
 
     elif (d == 2):
-        means = [np.array([-0.75, 0.5]),
-                 np.array([0.75, -0.5]),
-                 np.array([0.75, 0.5])]
+        means = [np.array([-0.85, 0.5]),
+                 np.array([0.85, -0.6]),
+                 np.array([0.85, 0.6])]
         axes = [np.array([[0.7, 0], 
                           [0, 0.3]]),
                 np.array([[0.5, 0], 
@@ -104,7 +104,7 @@ def color_samples(samples, color_code):
     return cols
 
 def plot_results(contour_X0, contour_X1, contour_Z, x_min, x_max, dx,
-                 sample_xs, samples, iter):
+                 sample_xs, samples, mean_pt, iter):
     output_plots = False
     enable_subplots = True
     color_code = True
@@ -120,6 +120,7 @@ def plot_results(contour_X0, contour_X1, contour_Z, x_min, x_max, dx,
     cols = color_samples(sample_xs, color_code)
     plt.clabel(CS, inline=1, fontsize=10, label='f(x)')
     plt.scatter(samples[:,0], samples[:,1], c=cols, label='samples', s=4, alpha=0.5)
+    plt.scatter(mean_pt[0,0], mean_pt[0,1], c='g', label='mean', s=80, marker='P')
 
     axis0 = plt.gca()
     axis0.set_xlim([x_min, x_max])
@@ -170,6 +171,7 @@ def main():
 
     i = 0
     sample_xs = h.sample_xs(num_samples)
+    x_size = sample_xs.shape[1]
 
     while(True):
         train(f, h, iter_steps)
@@ -177,7 +179,8 @@ def main():
 
         sample_xs = h.sample_xs(num_samples)
         samples = h.eval(sample_xs)
-        plot_results(X0, X1, Z, x_min, x_max, dx, sample_xs, samples, i)
+        mean_pt = h.eval(np.zeros([1, x_size]))
+        plot_results(X0, X1, Z, x_min, x_max, dx, sample_xs, samples, mean_pt, i)
 
 
 
