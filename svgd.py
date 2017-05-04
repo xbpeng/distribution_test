@@ -1,22 +1,5 @@
 import numpy as np
 
-def eval_kernel_grad_invsq(x, samples):
-    num_samples = samples.shape[0]
-    deltas = x - samples
-    dists = np.sum(deltas * deltas, axis=1)
-    dists = np.sqrt(dists)
-
-    m = 1
-    damping = 0.01
-    dists_damped = dists + damping
-    k = np.abs(m / (dists_damped * dists_damped * dists_damped))
-    k *= 4 / num_samples
-
-    dy = np.transpose(deltas).dot(k)
-
-    return dy
-
-
 def eval_kernel_grad_gaussian(x, samples):
     num_samples = samples.shape[0]
     deltas = x - samples
@@ -35,6 +18,23 @@ def eval_kernel_grad_gaussian(x, samples):
 
     return dy
 
+def eval_kernel_grad_invsq(x, samples):
+    m = 1
+    damping = 0.01
+
+    num_samples = samples.shape[0]
+    deltas = x - samples
+    dists = np.sum(deltas * deltas, axis=1)
+
+    dists_damped = dists + damping
+    k = 1 / (dists_damped * dists_damped)
+    k *= m / num_samples
+
+    dy = np.transpose(deltas).dot(k)
+
+    return dy
+
+
 def step(f, h, batch_size, entropy_w, num_samples):  
     xs = h.sample_xs(batch_size)
     ys = h.eval(xs)
@@ -48,8 +48,9 @@ def step(f, h, batch_size, entropy_w, num_samples):
         sample_xs = h.sample_xs(num_samples)
         sample_ys = h.eval(sample_xs)
 
-        dy = eval_kernel_grad_invsq(y, sample_ys)
         #dy = eval_kernel_grad_gaussian(y, sample_ys)
+        dy = eval_kernel_grad_invsq(y, sample_ys)
+        
         gs[i,:] += entropy_w * dy
 
         # hack
