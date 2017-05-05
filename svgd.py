@@ -19,16 +19,17 @@ def eval_kernel_grad_gaussian(x, samples):
     return dy
 
 def eval_kernel_grad_invquad(x, samples):
-    m = 10
+    w = 0.1
+    h = 1 / w
 
     num_samples = samples.shape[0]
     deltas = x - samples
     dists = np.sum(deltas * deltas, axis=1)
 
-    k = (m * m * dists)
+    k = (h * h * dists)
     k = 1 / (k + 1)
     k *= k
-    k *= 2 * m * m
+    k *= 2 * h * h
     k /= num_samples
 
     dy = np.transpose(deltas).dot(k)
