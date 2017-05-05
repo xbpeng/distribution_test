@@ -26,7 +26,7 @@ def eval_kernel_grad_invquad(x, samples):
     dists = np.sum(deltas * deltas, axis=1)
 
     k = (m * m * dists)
-    k = 1 / (1 + k)
+    k = 1 / (k + 1)
     k *= k
     k *= 2 * m * m
     k /= num_samples

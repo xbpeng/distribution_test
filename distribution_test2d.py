@@ -107,7 +107,7 @@ def plot_results(contour_X0, contour_X1, contour_Z, x_min, x_max, dx,
                  sample_xs, samples, mean_pt, iter):
     output_plots = False
     enable_subplots = False
-    color_code = True
+    color_code = False
     draw_correspondence = False
 
     fig = plt.gcf()
