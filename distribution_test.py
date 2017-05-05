@@ -9,10 +9,11 @@ def train(f, h, steps):
     batch_size = 32
     #entropy_w = 0.1
     entropy_w = 10
+    kernel_w = 0.1
     num_samples = 32
 
     for j in range(steps):
-        svgd.step(f, h, batch_size=batch_size, entropy_w = entropy_w, num_samples=num_samples)
+        svgd.step(f, h, batch_size=batch_size, entropy_w=entropy_w, kernel_w=kernel_w, num_samples=num_samples)
 
 def build_density_func():
     means = [np.array([-0.7]), 
