@@ -7,7 +7,8 @@ import svgd
 
 def train(f, h, steps):
     batch_size = 32
-    entropy_w = 0.1
+    #entropy_w = 0.1
+    entropy_w = 10
     num_samples = 32
 
     for j in range(steps):
@@ -26,7 +27,7 @@ def build_density_func():
 def build_net():
     input_dim = 1
     output_dim = 1
-    step_size = 0.001
+    step_size = 0.0002
     
     h = dn.DensityNet(input_dim, output_dim, step_size)
     return h
