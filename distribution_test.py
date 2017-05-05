@@ -20,7 +20,7 @@ def build_density_func():
              np.array([0.7])]
     covs = [np.array([[0.3 * 0.3]]), 
             np.array([[0.3 * 0.3]])]
-    weights = [1, 1]
+    weights = [2, 1]
     f = df.DensityFunc(means, covs, weights)
 
     return f
