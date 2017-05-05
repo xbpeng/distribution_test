@@ -18,8 +18,25 @@ def eval_kernel_grad_gaussian(x, samples):
 
     return dy
 
+def eval_kernel_grad_invsq(x, samples):
+    m = 1
+    damping = 0.01
+
+    num_samples = samples.shape[0]
+    deltas = x - samples
+    dists = np.sum(deltas * deltas, axis=1)
+
+    dists_damped = dists + damping
+    k = 1 / (dists_damped * dists_damped)
+    k *= m / num_samples
+
+    dy = np.transpose(deltas).dot(k)
+
+    return dy
+
+
 def eval_kernel_grad_invquad(x, samples):
-    m = 10
+    m = 7
 
     num_samples = samples.shape[0]
     deltas = x - samples
@@ -28,8 +45,10 @@ def eval_kernel_grad_invquad(x, samples):
     k = (m * m * dists)
     k = 1 / (1 + k)
     k *= k
-    k *= 2 * m * m
+    #k *= 2 * m * m
     k /= num_samples
+
+    k *= 10000 # hack
 
     dy = np.transpose(deltas).dot(k)
 
@@ -49,6 +68,7 @@ def step(f, h, batch_size, entropy_w, num_samples):
         sample_ys = h.eval(sample_xs)
 
         #dy = eval_kernel_grad_gaussian(y, sample_ys)
+        #dy = eval_kernel_grad_invsq(y, sample_ys)
         dy = eval_kernel_grad_invquad(y, sample_ys)
 
         gs[i,:] += entropy_w * dy

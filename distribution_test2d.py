@@ -9,7 +9,7 @@ import svgd
 def train(f, h, steps):
     batch_size = 32
     #entropy_w = 0.2
-    entropy_w = 0.5
+    entropy_w = 25
     num_samples = 32
 
     for j in range(steps):
@@ -106,7 +106,7 @@ def color_samples(samples, color_code):
 def plot_results(contour_X0, contour_X1, contour_Z, x_min, x_max, dx,
                  sample_xs, samples, mean_pt, iter):
     output_plots = False
-    enable_subplots = True
+    enable_subplots = False
     color_code = True
     draw_correspondence = False
 
