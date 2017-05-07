@@ -9,7 +9,7 @@ import svgd
 def train(f, h, steps):
     batch_size = 32
     #entropy_w = 0.2
-    entropy_w = 20
+    entropy_w = 40
     kernel_w = 0.15
     num_samples = 32
 
@@ -168,7 +168,6 @@ def main():
 
     Z = f.eval(X)
     Z = Z.reshape(X0.shape)
-    #gs = f.eval_grad_logp(xs)
 
     i = 0
     sample_xs = h.sample_xs(num_samples)

@@ -8,7 +8,7 @@ import svgd
 def train(f, h, steps):
     batch_size = 32
     #entropy_w = 0.1
-    entropy_w = 10
+    entropy_w = 20
     kernel_w = 0.1
     num_samples = 32
 
