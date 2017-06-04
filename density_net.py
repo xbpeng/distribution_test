@@ -14,19 +14,18 @@ class DensityNet(object):
         self.input_dim = input_dim
         self.output_dim = output_dim
 
-        x_n = U.Input([None, self.input_dim], name='x')
-        g_n = U.Input([None, self.output_dim], name='g')
+        self.x_n = U.Input([None, self.input_dim], name='x')
+        self.g_n = U.Input([None, self.output_dim], name='g')
 
-        h1 = U.relu(U.dense(x_n, 64, weight_init=U.Xavier(1.0)))
+        h1 = U.relu(U.dense(self.x_n, 64, weight_init=U.Xavier(1.0)))
         h2 = U.relu(U.dense(h1, 64, weight_init=U.Xavier(1.0)))
         output = U.dense(h2, self.output_dim, weight_init=U.Xavier(1.0))
 
         net_params = tf.trainable_variables()
-        grads = tf.gradients(output, net_params, -g_n)
-        update_op = tf.train.MomentumOptimizer(learning_rate=step_size, momentum=momentum).apply_gradients(zip(grads, net_params))
+        grads = tf.gradients(output, net_params, -self.g_n)
         
-        self.eval = U.function([x_n], output)
-        self._step = U.function([x_n, g_n], update_op)
+        self.eval = U.function([self.x_n], output)
+        self._step = tf.train.MomentumOptimizer(learning_rate=step_size, momentum=momentum).apply_gradients(zip(grads, net_params))
 
         U.initialize()
 
@@ -45,4 +44,8 @@ class DensityNet(object):
         return xs
 
     def update(self, x_n, g_n):
-        self._step(x_n, g_n)
+        feed = {
+            self.x_n : x_n,
+            self.g_n : g_n
+        }
+        U.SESSION.run(self._step, feed)

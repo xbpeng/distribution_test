@@ -35,6 +35,28 @@ def eval_kernel_grad_invquad(kernel_w, x, samples):
 
     return dy
 
+def eval_kernel_grad_invquad_test(kernel_w, x, samples):
+    num_samples = samples.shape[0]
+    deltas = x - samples
+    dists = np.sum(deltas * deltas, axis=1)
+
+    sort_indices = np.argsort(dists)
+    mid = int((num_samples - 1) / 2)
+    med_idx = sort_indices[mid]
+    med = dists[med_idx]
+
+    h = 1 / (0.2 * np.sqrt(med))
+
+    k = (h * h * dists)
+    k = 1 / (k + 1)
+    k *= k
+    k *= 2 * h * h
+    k /= num_samples
+
+    dy = np.transpose(deltas).dot(k)
+
+    return dy
+
 def step(f, h, batch_size, entropy_w, kernel_w, num_samples):  
     xs = h.sample_xs(batch_size)
     ys = h.eval(xs)
@@ -49,7 +71,8 @@ def step(f, h, batch_size, entropy_w, kernel_w, num_samples):
         sample_ys = h.eval(sample_xs)
 
         #dy = eval_kernel_grad_gaussian(y, sample_ys)
-        dy = eval_kernel_grad_invquad(kernel_w, y, sample_ys)
+        #dy = eval_kernel_grad_invquad(kernel_w, y, sample_ys)
+        dy = eval_kernel_grad_invquad_test(kernel_w, y, sample_ys)
 
         gs[i,:] += entropy_w * dy
 
